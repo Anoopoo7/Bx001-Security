@@ -1,0 +1,14 @@
+server:
+  port: 6443
+  error:
+    include-stacktrace: never
+
+custom:
+  baseUrl: https://jsonplaceholder.typicode.com
+  verifyUser: /todos/1
+  anonymusUser: /todos/2
+  token:
+    fields: email, password
+    secret: NTEzMEVCMDctRUI3NC00MzlBLTlCNEEtN0NEMEEyOTQyNjFC
+    refreshIntervel: 60
+    acessIntervel: 10
