@@ -4,11 +4,11 @@ server:
     include-stacktrace: never
 
 custom:
-  baseUrl: https://jsonplaceholder.typicode.com
-  verifyUser: /todos/1
-  anonymusUser: /todos/2
+  baseUrl: https://localhost:8080
+  verifyUser: /v1/user
+  anonymusUser: /v1/user/anonymus
   token:
     fields: email, password
-    secret: NTEzMEVCMDctRUI3NC00MzlBLTlCNEEtN0NEMEEyOTQyNjFC
+    secret: secret
     refreshIntervel: 60
     acessIntervel: 10
