@@ -24,26 +24,39 @@ public class TokenServiceImpl implements TokenService {
     @Autowired
     private JwtUtils jwtUtils;
 
+    private TokenResponse populateToken(Map<String, String> user) {
+        String accessToken = jwtUtils.generateToken(user, TokenTypes.access.name());
+        String refreshToken = jwtUtils.generateToken(user, TokenTypes.refresh.name());
+        return new TokenResponse(
+                accessToken,
+                refreshToken,
+                user.get("permissions"));
+    }
+
     @Override
     public TokenResponse createToken(final CreateTokenRequest createTokenRequest,
             final HttpServletRequest request) {
         if (StringUtils.isNotBlank(createTokenRequest.getTokenType().name())
                 && TokenTypes.Anonymus.equals(createTokenRequest.getTokenType())) {
             Map<String, String> user = userRestUtil.createAnonymusUser();
-            user.put("email", "user@gmail.com");
-            user.put("password", "password");
-            String accessToken = jwtUtils.generateToken(user, TokenTypes.access.name());
-            String refreshToken = jwtUtils.generateToken(user, TokenTypes.refresh.name());
-            return new TokenResponse(
-                    accessToken,
-                    refreshToken,
-                    user.get("permissions"));
+            if (null != user) {
+                return populateToken(user);
+            }
+            throw new RuntimeException(TokenEnums.NO_ANONYMUS_ACCESS.name());
         }
         String token = TokenHelper.extractToken(request);
-        if (StringUtils.isEmpty(token)) {
-            throw new RuntimeException(TokenEnums.INVALID_TOKEN.name());
+        if (StringUtils.isNotEmpty(token)) {
+            if (jwtUtils.validateToken(token)) {
+                Map<String, String> tokenData = jwtUtils.decriptToken(token);
+                if (TokenTypes.access.name().equals(tokenData.get("tokenType"))) {
+                    Map<String, String> user = userRestUtil.verifyUser(tokenData);
+                    if (null != user) {
+                        return populateToken(user);
+                    }
+                }
+            }
         }
-        return null;
+        throw new RuntimeException(TokenEnums.INVALID_TOKEN.name());
     }
 
 }

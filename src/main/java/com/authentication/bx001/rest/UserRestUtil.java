@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -30,9 +31,10 @@ public class UserRestUtil {
         return builder.toString();
     }
 
-    public Map<String, String> verifyUser() {
+    public Map<String, String> verifyUser(Map<String, String> tokenData) {
+        HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(tokenData, null);
         ResponseEntity<Map<String, String>> result = restTemplate.exchange(
-                uriBuilder(baseUrl, verifyUser), HttpMethod.GET, null,
+                uriBuilder(baseUrl, verifyUser), HttpMethod.POST, requestEntity,
                 new ParameterizedTypeReference<Map<String, String>>() {
                 });
         return result.getBody();

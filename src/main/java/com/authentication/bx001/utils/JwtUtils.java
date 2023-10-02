@@ -2,12 +2,15 @@ package com.authentication.bx001.utils;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -46,26 +49,25 @@ public class JwtUtils {
         return builder.signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
     }
 
-    // public boolean validateToken(String token) {
-    // try {
-    // Claims decriptedData =
-    // Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
-    // return !decriptedData.getExpiration().before(new
-    // Date(System.currentTimeMillis()));
-    // } catch (Exception e) {
-    // return false;
-    // }
-    // }
+    public boolean validateToken(String token) {
+        try {
+            Claims decriptedData = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+            return !decriptedData.getExpiration().before(new Date(System.currentTimeMillis()));
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
-    // public TokenData decriptToken(String token) {
-    // Jws<Claims> decriptedData =
-    // Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
-    // Claims claims = decriptedData.getBody();
-    // String email = (String) claims.get("email");
-    // String userId = (String) claims.get("userId");
-    // boolean annonymus = (boolean) claims.get("annonymus");
-    // String tokenType = (String) claims.get("tokenType");
-    // TokenData tokenData = new TokenData(email, userId, annonymus, tokenType);
-    // return tokenData;
-    // }
+    public Map<String, String> decriptToken(String token) {
+        Jws<Claims> decriptedData = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
+        Claims claims = decriptedData.getBody();
+        Map<String, String> tokenData = new HashMap<String, String>();
+        if (null != tokenFields) {
+            tokenFields.stream().forEach(field -> {
+                tokenData.put(field, (String) claims.get(field));
+            });
+        }
+        tokenData.put("tokenType", (String) claims.get("tokenType"));
+        return tokenData;
+    }
 }
