@@ -60,4 +60,21 @@ public class TokenServiceImpl implements TokenService {
         throw new RuntimeException(TokenEnums.INVALID_TOKEN.name());
     }
 
+    @Override
+    public TokenResponse createRefreshToken(final HttpServletRequest request) {
+        String token = TokenHelper.extractToken(request);
+        if (StringUtils.isNotEmpty(token)) {
+            if (jwtUtils.validateToken(token)) {
+                Map<String, String> tokenData = jwtUtils.decriptToken(token);
+                if (TokenTypes.refresh.name().equals(tokenData.get(Constants.tokenType.name()))) {
+                    Map<String, String> user = userRestUtil.verifyUser(tokenData);
+                    if (null != user) {
+                        return populateToken(user);
+                    }
+                }
+            }
+        }
+        throw new RuntimeException(TokenEnums.INVALID_TOKEN.name());
+    }
+
 }

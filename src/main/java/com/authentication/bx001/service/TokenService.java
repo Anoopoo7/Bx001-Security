@@ -14,6 +14,14 @@ public interface TokenService {
      * @param request
      * @return
      */
-    TokenResponse createToken(CreateTokenRequest createTokenRequest, HttpServletRequest request);
+    TokenResponse createToken(final CreateTokenRequest createTokenRequest, final HttpServletRequest request);
+
+    /**
+     * Create token from refresh token
+     * 
+     * @param request
+     * @return
+     */
+    TokenResponse createRefreshToken(final HttpServletRequest request);
 
 }

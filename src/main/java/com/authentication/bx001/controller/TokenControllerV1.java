@@ -35,4 +35,15 @@ public class TokenControllerV1 {
             final HttpServletRequest request) {
         return tokenService.createToken(createTokenRequest, request);
     }
+
+    /**
+     * Create token from refresh token
+     * 
+     * @param request
+     * @return
+     */
+    @PostMapping
+    public TokenResponse createRefreshToken(final HttpServletRequest request) {
+        return tokenService.createRefreshToken(request);
+    }
 }
