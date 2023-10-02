@@ -9,6 +9,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.authentication.bx001.core.Constants;
+import com.authentication.bx001.core.enums.TokenTypes;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtBuilder;
@@ -33,7 +36,7 @@ public class JwtUtils {
     private Date expire(String type) {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MINUTE,
-                type.equals("access") ? 10 : 60);
+                type.equals(TokenTypes.access.name()) ? 10 : 60);
         return calendar.getTime();
     }
 
@@ -44,7 +47,7 @@ public class JwtUtils {
                 builder.claim(field, userView.get(field));
             });
         }
-        builder.claim("tokenType", tokenType);
+        builder.claim(Constants.tokenType.name(), tokenType);
         builder.setExpiration(expire(tokenType));
         return builder.signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
     }
@@ -67,7 +70,8 @@ public class JwtUtils {
                 tokenData.put(field, (String) claims.get(field));
             });
         }
-        tokenData.put("tokenType", (String) claims.get("tokenType"));
+        tokenData.put(Constants.tokenType.name(),
+                (String) claims.get(Constants.tokenType.name()));
         return tokenData;
     }
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.authentication.bx001.core.Constants;
 import com.authentication.bx001.core.enums.TokenEnums;
 import com.authentication.bx001.core.enums.TokenTypes;
 import com.authentication.bx001.helper.TokenHelper;
@@ -30,7 +31,7 @@ public class TokenServiceImpl implements TokenService {
         return new TokenResponse(
                 accessToken,
                 refreshToken,
-                user.get("permissions"));
+                user.get(Constants.permissions.name()));
     }
 
     @Override
@@ -48,7 +49,7 @@ public class TokenServiceImpl implements TokenService {
         if (StringUtils.isNotEmpty(token)) {
             if (jwtUtils.validateToken(token)) {
                 Map<String, String> tokenData = jwtUtils.decriptToken(token);
-                if (TokenTypes.access.name().equals(tokenData.get("tokenType"))) {
+                if (TokenTypes.access.name().equals(tokenData.get(Constants.tokenType.name()))) {
                     Map<String, String> user = userRestUtil.verifyUser(tokenData);
                     if (null != user) {
                         return populateToken(user);
