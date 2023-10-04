@@ -1,5 +1,7 @@
 package com.authentication.bx001.controller;
 
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +44,19 @@ public class TokenControllerV1 {
      * @param request
      * @return
      */
-    @PostMapping
+    @PostMapping("/refresh")
     public TokenResponse createRefreshToken(final HttpServletRequest request) {
         return tokenService.createRefreshToken(request);
+    }
+
+    /**
+     * Validate token
+     * 
+     * @param request
+     * @return
+     */
+    @PostMapping("/validate")
+    public Map<String, String> validateToken(final HttpServletRequest request) {
+        return tokenService.validateToken(request);
     }
 }

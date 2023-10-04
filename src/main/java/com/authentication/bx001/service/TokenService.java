@@ -1,5 +1,7 @@
 package com.authentication.bx001.service;
 
+import java.util.Map;
+
 import com.authentication.bx001.model.CreateTokenRequest;
 import com.authentication.bx001.model.TokenResponse;
 
@@ -23,5 +25,13 @@ public interface TokenService {
      * @return
      */
     TokenResponse createRefreshToken(final HttpServletRequest request);
+
+    /**
+     * Validate token
+     * 
+     * @param request
+     * @return
+     */
+    Map<String, String> validateToken(final HttpServletRequest request);
 
 }
