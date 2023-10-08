@@ -43,9 +43,18 @@
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-1. Clone the repository: ` git clone https://github.com/Anoopoo7/Bx001-Security.git`
-2. Install dependencies: ` mvn clean install`
-3. Start the application: ` java -jar target/your-application.jar`
+1. Clone the repository:
+```bash
+git clone https://github.com/Anoopoo7/Bx001-Security.git
+```
+2. Install dependencies:
+```bash
+ mvn clean install
+```
+3. Start the application:
+```bash
+ java -jar target/bx001-security.jar
+```
 
 ## Configuration
 
